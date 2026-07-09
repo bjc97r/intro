@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>최병조 - 임베디드시스템공학과 교수</title>
+    <style>
+        /* 기본 스타일 및 폰트 (공학 및 IT 분야에 어울리는 모던한 산세리프체) */
+        :root {
+            --primary-color: #1a365d;
+            --accent-color: #3182ce;
+            --bg-color: #f8fafc;
+            --text-color: #2d3748;
+            --light-gray: #edf2f7;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* 내비게이션 바 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            padding: 1rem 0;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        /* 공통 섹션 스타일 */
+        section {
+            padding: 80px 20px 60px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+
+        /* Hero 섹션 */
+        #hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: var(--light-gray);
+            padding: 0 20px;
+        }
+
+        #hero h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        #hero p.subtitle {
+            font-size: 1.25rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .keywords span {
+            background-color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid #cbd5e0;
+            margin: 0 5px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* 카드 UI */
+        .card-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .card-container {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--accent-color);
+        }
+
+        /* FAQ 아코디언 */
+        .faq-item {
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background-color: white;
+            padding: 18px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            color: var(--primary-color);
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            background-color: var(--bg-color);
+        }
+
+        /* 푸터 */
+        /* 방명록 */
+        .guestbook-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .guestbook-form input,
+        .guestbook-form textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            color: var(--text-color);
+        }
+
+        .guestbook-form textarea {
+            grid-column: 1 / -1;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .guestbook-form input:focus,
+        .guestbook-form textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .guestbook-submit {
+            grid-column: 1 / -1;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .guestbook-submit:hover {
+            background-color: var(--primary-color);
+        }
+
+        .guestbook-submit:disabled {
+            background-color: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        .guestbook-status {
+            font-size: 0.85rem;
+            margin: 8px 0 25px;
+            min-height: 1.2em;
+        }
+
+        .guestbook-status.error { color: #c53030; }
+        .guestbook-status.success { color: #2f855a; }
+
+        .guestbook-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .guestbook-entry {
+            background: white;
+            padding: 18px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .guestbook-entry .entry-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .guestbook-entry .entry-name {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .guestbook-entry .entry-date {
+            font-size: 0.8rem;
+            color: #a0aec0;
+        }
+
+        .guestbook-entry .entry-message {
+            margin: 0;
+            color: var(--text-color);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .guestbook-empty {
+            color: #a0aec0;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .guestbook-loading {
+            color: #a0aec0;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .guestbook-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: 50px;
+        }
+        
+        footer a {
+            color: #90cdf4;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 내비게이션 -->
+    <nav>
+        <a href="#hero">Home</a>
+        <a href="#about">About</a>
+        <a href="#research">Research</a>
+        <a href="#teaching">Teaching</a>
+        <a href="#publications">Publications</a>
+        <a href="#guestbook">Guestbook</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <!-- 1. Hero Section -->
+    <section id="hero">
+        <h1>최병조</h1>
+        <p class="subtitle">인천대학교 임베디드시스템공학과 교수</p>
+        <p>"모바일 통신과 물리적 인공지능(Physical AI)의 융합을 통해 차세대 초연결 시스템을 연구합니다."</p>
+        <div class="keywords">
+            <span>#모바일통신</span>
+            <span>#임베디드시스템</span>
+            <span>#Physical_AI</span>
+            <span>#자율주행로봇</span>
+        </div>
+    </section>
+
+    <!-- 2. About -->
+    <section id="about">
+        <h2>About</h2>
+        <p>
+            빠르게 변화하는 IT 환경 속에서, 모바일 통신 네트워크와 임베디드 시스템의 결합은 자율주행, 스마트 팩토리, 그리고 차세대 로보틱스를 구현하는 핵심 기반입니다. 
+            단순한 소프트웨어 알고리즘을 넘어, 현실 세계와 상호작용하는 물리적 인공지능(Physical AI) 관점에서 통신 시스템의 최적화와 임베디드 하드웨어의 혁신을 탐구하고 있습니다. 
+            학문적 연구에 그치지 않고 실제 산업 현장에서 직면하는 문제들을 해결하며, 2027년 인공지능시스템공학과로의 도약을 앞두고 미래 지향적인 기술 인재를 양성하는 데 주력하고 있습니다.
+        </p>
+    </section>
+
+    <!-- 3. Research -->
+    <section id="research">
+        <h2>Research</h2>
+        <div class="card-container">
+            <div class="card">
+                <h3>모바일 통신 & 네트워크</h3>
+                <p>차세대 무선 통신 환경에서의 신호 처리, 적응형 변조(Adaptive Modulation) 기법 연구 및 차량용 통신 기술(Vehicular Technology) 최적화</p>
+            </div>
+            <div class="card">
+                <h3>임베디드 및 인공지능 시스템</h3>
+                <p>센서 데이터 수집 및 엣지 컴퓨팅 기반의 Physical AI 시스템 설계, 스마트 모니터링 환경(예: Beehive monitoring) 구축</p>
+            </div>
+            <div class="card">
+                <h3>자율이동로봇 (AMR)</h3>
+                <p>RoboCup Industry League 등 실제 환경에서 임무를 수행하는 지능형 로봇 제어 시스템 및 적층제조(DfAM) 기술을 활용한 하드웨어 구현</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Teaching -->
+    <section id="teaching">
+        <h2>Teaching</h2>
+        <p><strong>수업 철학:</strong> 학생 스스로 문제를 정의하고 해결하는 '기업연계형 Live-PBL'과 AI 기반 에디터(Cursor 등)를 활용한 'Vibe Coding' 등 최신 도구와 방법론을 적극 도입하여 실무 역량을 극대화합니다. Notion과 Classum을 활용한 체계적인 포트폴리오 관리를 통해 학생들의 성장을 지원합니다.</p>
+        <br>
+        <div class="card-container">
+            <div class="card">
+                <h3>학부 강의</h3>
+                <ul>
+                    <li>창의설계입문</li>
+                    <li>AI와 함께 떠나는 MATLAB 탐험기 (신입생 대상)</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>대학원 강의</h3>
+                <ul>
+                    <li>대학원 논문연구 (Graduate Thesis Research)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Publications & 6. Projects -->
+    <section id="publications">
+        <h2>Publications & Projects</h2>
+        
+        <h3>대표 논문 및 저서</h3>
+        <ul>
+            <li><strong>WHT-Aided Adaptive Modulation</strong> <em>(주요 논문)</em></li>
+            <li>차량용 통신 네트워크 및 임베디드 시스템 기술 관련 다수 학술지 논문 게재 및 기술 피어 리뷰(Peer Review) 활동</li>
+        </ul>
+
+        <h3>진행 중인 프로젝트</h3>
+        <ul>
+            <li><strong>Beehive monitoring 프로젝트:</strong> 임베디드 시스템 기반 스마트 모니터링 구축</li>
+            <li><strong>RoboCup 2026 World Championship:</strong> Industry 리그 자율이동로봇(AMR) 기술 개발 및 준비</li>
+        </ul>
+    </section>
+
+    <!-- 7. FAQ -->
+    <section id="faq">
+        <h2>FAQ</h2>
+        <p>학생 및 외부 기관에서 자주 묻는 질문입니다.</p>
+        
+        <div class="faq-item">
+            <div class="faq-question">Q. 학부생 연구 참여(면담) 절차는 어떻게 되나요? <span class="icon">+</span></div>
+            <div class="faq-answer">
+                <p>A. 모바일 통신 및 임베디드 시스템, 로보틱스 연구에 관심 있는 학부생의 참여를 환영합니다. 사전에 간단한 자기소개서와 관심 분야를 적어 이메일로 면담을 신청해 주시기 바랍니다.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Q. 대학원 진학 및 연구실 합류를 희망합니다. <span class="icon">+</span></div>
+            <div class="faq-answer">
+                <p>A. 물리적 인공지능(Physical AI) 및 차세대 통신 시스템 분야로 깊이 있는 연구를 원하는 학생을 모집 중입니다. 성적증명서를 첨부하여 이메일로 연락 바랍니다.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Q. 외부 강연이나 자문 요청, 기업 협력은 어떻게 진행하나요? <span class="icon">+</span></div>
+            <div class="faq-answer">
+                <p>A. 기업연계형 Live-PBL 프로젝트 제안, 기술 자문(통신, 임베디드, 로봇 공학), 강연 요청 등은 하단의 연락처(이메일 또는 전화)로 개요를 보내주시면 확인 후 회신해 드립니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7.5 Guestbook -->
+    <section id="guestbook">
+        <h2>Guestbook</h2>
+        <p>연구실 방문 소감, 질문, 응원의 말을 남겨주세요. 남겨주신 글은 모든 방문자에게 공개됩니다.</p>
+
+        <form id="guestbook-form" class="guestbook-form">
+            <input type="text" id="gb-name" placeholder="이름" maxlength="30" required>
+            <input type="text" id="gb-honeypot" style="position:absolute; left:-9999px;" tabindex="-1" autocomplete="off">
+            <textarea id="gb-message" placeholder="메시지를 남겨주세요" maxlength="500" required></textarea>
+            <button type="submit" class="guestbook-submit" id="gb-submit-btn">방명록 남기기</button>
+        </form>
+        <p class="guestbook-status" id="gb-status"></p>
+
+        <div class="guestbook-list" id="guestbook-list">
+            <p class="guestbook-loading">방명록을 불러오는 중...</p>
+        </div>
+    </section>
+
+    <!-- 8. Contact -->
+    <section id="contact">
+        <h2>Contact</h2>
+        <p>연구 협력, 학생 면담, 프로젝트 문의 등은 아래 연락처로 부탁드립니다.</p>
+        <ul>
+            <li><strong>Phone:</strong> 010-6737-1536</li>
+            <li><strong>Office:</strong> 인천대학교 임베디드시스템공학과 연구실</li>
+            <li><strong>Email:</strong> [이메일 주소 입력 필요]</li>
+        </ul>
+    </section>
+
+    <!-- 푸터 -->
+    <footer>
+        <p>&copy; 2026 최병조. All rights reserved.</p>
+    </footer>
+
+    <!-- Supabase (방명록 데이터 저장용) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        // ============================================
+        // ⚠️ 방명록 설정: 아래 두 값을 본인의 Supabase
+        // 프로젝트 정보로 반드시 교체해야 방명록이 동작합니다.
+        // 설정 방법은 함께 전달된 가이드를 참고하세요.
+        // ============================================
+        const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+        const SUPABASE_ANON_KEY = 'YOUR_ANON_PUBLIC_KEY';
+
+        let supabaseClient = null;
+        const gbConfigured = !SUPABASE_URL.includes('YOUR_PROJECT_ID') && !SUPABASE_ANON_KEY.includes('YOUR_ANON');
+        if (gbConfigured && window.supabase) {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        const gbListEl = document.getElementById('guestbook-list');
+        const gbForm = document.getElementById('guestbook-form');
+        const gbStatusEl = document.getElementById('gb-status');
+        const gbSubmitBtn = document.getElementById('gb-submit-btn');
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function formatDate(iso) {
+            const d = new Date(iso);
+            return d.toLocaleString('ko-KR', {
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function renderEntries(entries) {
+            if (!entries || entries.length === 0) {
+                gbListEl.innerHTML = '<p class="guestbook-empty">아직 방명록이 없습니다. 첫 글을 남겨주세요!</p>';
+                return;
+            }
+            gbListEl.innerHTML = entries.map(e => `
+                <div class="guestbook-entry">
+                    <div class="entry-head">
+                        <span class="entry-name">${escapeHtml(e.name)}</span>
+                        <span class="entry-date">${formatDate(e.created_at)}</span>
+                    </div>
+                    <p class="entry-message">${escapeHtml(e.message)}</p>
+                </div>
+            `).join('');
+        }
+
+        async function loadEntries() {
+            if (!supabaseClient) {
+                gbListEl.innerHTML = '<p class="guestbook-empty">방명록이 아직 설정되지 않았습니다. (관리자: Supabase 연동 필요)</p>';
+                return;
+            }
+            const { data, error } = await supabaseClient
+                .from('guestbook')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(100);
+
+            if (error) {
+                gbListEl.innerHTML = '<p class="guestbook-empty">방명록을 불러오지 못했습니다.</p>';
+                console.error(error);
+                return;
+            }
+            renderEntries(data);
+        }
+
+        if (gbForm) {
+            gbForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('gb-name').value.trim();
+                const message = document.getElementById('gb-message').value.trim();
+                const honeypot = document.getElementById('gb-honeypot').value;
+
+                if (honeypot) return; // 스팸 봇 차단
+                if (!name || !message) return;
+
+                if (!supabaseClient) {
+                    gbStatusEl.textContent = '방명록이 아직 설정되지 않았습니다. 관리자에게 문의해 주세요.';
+                    gbStatusEl.className = 'guestbook-status error';
+                    return;
+                }
+
+                gbSubmitBtn.disabled = true;
+                gbSubmitBtn.textContent = '등록 중...';
+                gbStatusEl.textContent = '';
+                gbStatusEl.className = 'guestbook-status';
+
+                const { error } = await supabaseClient
+                    .from('guestbook')
+                    .insert([{ name: name.slice(0, 30), message: message.slice(0, 500) }]);
+
+                gbSubmitBtn.disabled = false;
+                gbSubmitBtn.textContent = '방명록 남기기';
+
+                if (error) {
+                    gbStatusEl.textContent = '등록에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+                    gbStatusEl.className = 'guestbook-status error';
+                    console.error(error);
+                    return;
+                }
+
+                gbStatusEl.textContent = '방명록이 등록되었습니다. 감사합니다!';
+                gbStatusEl.className = 'guestbook-status success';
+                gbForm.reset();
+                loadEntries();
+            });
+        }
+
+        loadEntries();
+    </script>
+
+    <!-- JavaScript -->
+    <script>
+        // 부드러운 스크롤
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                window.scrollTo({
+                    top: targetSection.offsetTop - 60,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // FAQ 아코디언 동작
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('.icon');
+                
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    answer.style.padding = "0 20px";
+                    icon.textContent = "+";
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    answer.style.padding = "15px 20px";
+                    icon.textContent = "-";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
